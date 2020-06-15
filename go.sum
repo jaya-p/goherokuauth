@@ -1,2 +1,4 @@
+github.com/jaya-p/goheroku v0.0.0-20200614172608-f0e37e9ca158 h1:sRBM3W5RnWUI7HSGHKm0wQIkPQJ/xEWSDKXCuvmqd+E=
+github.com/jaya-p/goheroku v0.0.0-20200614172608-f0e37e9ca158/go.mod h1:k1ThlAHuNM4+GtQri1QWr+F+Utt73ApkFqokeQjB4PQ=
 github.com/lib/pq v1.7.0 h1:h93mCPfUSkaul3Ka/VG8uZdmW1uMHDGxzu0NWHuJmHY=
 github.com/lib/pq v1.7.0/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=

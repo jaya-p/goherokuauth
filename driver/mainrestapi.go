@@ -1,9 +1,8 @@
-// build: go build driver/restapiwebserver/mainrestapi.go
-// run: go run driver/restapiwebserver/mainrestapi.go
+// build: go build driver/mainrestapi.go
+// run: go run driver/mainrestapi.go
 // test:
-//				GET: curl http://localhost:8080/api/v1/helloworld
-//				POST: curl -d '{"name":"indonesia"}' -H "Content-Type: application/json" -X POST http://localhost:8080/api/v1/helloworld
-//				DELETE: curl -X DELETE http://localhost:8080/api/v1/helloworld
+//				POST: curl -d '{"Username":"me", "PasswordHash":"me"}' -H "Content-Type: application/json" -X POST http://localhost:8080/api/v1/auth
+//				DELETE: curl -X DELETE http://localhost:8080/api/v1/auth
 
 package main
 
@@ -12,7 +11,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/jaya-p/goheroku"
+	"github.com/jaya-p/goherokuauth"
 )
 
 func main() {
@@ -24,5 +23,5 @@ func main() {
 	fmt.Println("REST API web server is running on port " + httpPortNumber)
 
 	httpPortNumberInUint, _ := strconv.ParseUint(httpPortNumber, 10, 32)
-	goheroku.HelloworldRestAPIWebserver(uint(httpPortNumberInUint))
+	goherokuauth.RestAPIWebserver(uint(httpPortNumberInUint))
 }
