@@ -37,7 +37,7 @@ func TestAuthPostHandler(t *testing.T) {
 
 func TestStatusNotFoundHandler(t *testing.T) {
 
-	r := httptest.NewRequest("DELETE", "/api/v1/helloworld", nil)
+	r := httptest.NewRequest("DELETE", "/api/v1/auth", nil)
 	w := httptest.NewRecorder()
 	h := http.HandlerFunc(authRestAPIHandler)
 

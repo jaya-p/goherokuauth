@@ -27,17 +27,23 @@ func randomString(n int) string {
 // getAccountID provides accountID on correct username and passwordHash
 func getAccountID(username string, passwordHash string) (int, error) {
 	if username == "" || passwordHash == "" {
-		return 1, errors.New("username and/or passwordHash are empty")
+		return -1, errors.New("username and/or passwordHash are empty")
 	}
 
-	var id int16
+	db, errO := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	if errO != nil {
+		log.Print(errO)
+		return -1, errO
+	}
+
+	var id int
 	row := db.QueryRow("SELECT id FROM account WHERE username=$1 AND passwordHash=$2", username, passwordHash)
 	switch errR := row.Scan(&id); errR {
 	case nil:
 		return id, nil
 	default: // including sql.ErrNoRows
 		log.Print(errR)
-		return "", errR
+		return -1, errR
 	}
 }
 
@@ -71,19 +77,13 @@ func createToken(id int) (string, error) {
 
 // GetToken will get value of a field
 func GetToken(username string, passwordHash string) (string, error) {
-	db, errO := sql.Open("postgres", os.Getenv("DATABASE_URL"))
-	if errO != nil {
-		log.Print(errO)
-		return "", errO
-	}
-
-	id, errC := getAccountID(username, passwordHash)
+	userId, errC := getAccountID(username, passwordHash)
 	if errC != nil {
 		log.Print(errC)
 		return "", errC
 	}
 
-	token, errG := createToken(id)
+	token, errG := createToken(userId)
 	if errG != nil {
 		log.Print(errG)
 		return "", errG
