@@ -26,13 +26,15 @@ func randomString(n int) string {
 
 // getAccountID provides accountID on correct username and passwordHash
 func getAccountID(username string, passwordHash string) (int, error) {
+	log.SetOutput(os.Stdout)
+
 	if username == "" || passwordHash == "" {
 		return -1, errors.New("username and/or passwordHash are empty")
 	}
 
 	db, errO := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if errO != nil {
-		log.Print(errO)
+		log.Println(errO)
 		return -1, errO
 	}
 
@@ -42,20 +44,22 @@ func getAccountID(username string, passwordHash string) (int, error) {
 	case nil:
 		return id, nil
 	default: // including sql.ErrNoRows
-		log.Print(errR)
+		log.Println(errR)
 		return -1, errR
 	}
 }
 
 // createToken on current implementation. 1 user = 1 token. no expiration.
 func createToken(id int) (string, error) {
+	log.SetOutput(os.Stdout)
+
 	if id == 0 {
 		return "", errors.New("invalid id. id = 0")
 	}
 
 	db, errO := sql.Open("postgres", os.Getenv("DATABASE_URL"))
 	if errO != nil {
-		log.Print(errO)
+		log.Println(errO)
 		return "", errO
 	}
 
@@ -68,7 +72,7 @@ func createToken(id int) (string, error) {
 		" DO UPDATE "+
 		" SET user_id=$1, token=$2", id, token)
 	if errE != nil {
-		log.Print(errE)
+		log.Println(errE)
 		return "", errE
 	}
 
@@ -77,15 +81,17 @@ func createToken(id int) (string, error) {
 
 // GetToken will get value of a field
 func GetToken(username string, passwordHash string) (string, error) {
+	log.SetOutput(os.Stdout)
+
 	userId, errC := getAccountID(username, passwordHash)
 	if errC != nil {
-		log.Print(errC)
+		log.Println(errC)
 		return "", errC
 	}
 
 	token, errG := createToken(userId)
 	if errG != nil {
-		log.Print(errG)
+		log.Println(errG)
 		return "", errG
 	}
 

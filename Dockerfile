@@ -1,7 +1,7 @@
 # Docker build: docker build -t gha .
 # Set app: heroku git:remote --app <app-name>
-# Build for heroku: heroku container:push <app-name>
-# Push for heroku: heroku container:release <app-name>
+# Build for heroku: heroku container:push web <app-name>
+# Push for heroku: heroku container:release web <app-name>
 # See logs in heroku: heroku logs --tail
 
 # This Dockerfile use multi stage approach. STAGE 1 is to build the binary
