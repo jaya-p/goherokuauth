@@ -11,10 +11,8 @@
 # Use golang-based image for container; golang version 1.14.4
 FROM golang:1.14.4-alpine AS builder
 
-# GO111MODULE=on to enable go modules for downloading dependencies
 # CGO_ENABLED=0 to include all linked library included in the output binary
-ENV GO111MODULE=on \  
-  CGO_ENABLED=0 
+ENV CGO_ENABLED=0 
 
 # Add git executable in container
 RUN apk add --no-cache git
@@ -26,6 +24,7 @@ COPY ./driver/mainrestapi.go /go/src/
 WORKDIR /go
 
 # Build the application
+RUN go get github.com/jaya-p/goherokuauth
 RUN go build -o bin/main src/mainrestapi.go
 
 # STAGE 2 is to have smallest image possible by including only necessary binary
