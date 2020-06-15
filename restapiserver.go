@@ -13,6 +13,32 @@ type authPostRequest struct {
 	PasswordHash string
 }
 
+// authGetHandler handles GET method
+func authGetHandler(w http.ResponseWriter, r *http.Request) {
+	token := r.URL.Query().Get("token")
+	if token == "" {
+		log.Print("token is empty")
+
+		w.WriteHeader(http.StatusBadRequest)
+		io.WriteString(w, "")
+
+		return
+	}
+
+	ok, err := CheckToken(token)
+	if !ok || err != nil {
+		log.Print(err)
+
+		w.WriteHeader(http.StatusInternalServerError)
+		io.WriteString(w, "")
+
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	io.WriteString(w, "OK")
+}
+
 // authPostHandler handles POST method
 func authPostHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
@@ -55,6 +81,8 @@ func authRestAPIHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Set HTTP Response Body, based on HTTP request method
 	switch r.Method {
+	case "GET":
+		authGetHandler(w, r)
 	case "POST":
 		authPostHandler(w, r)
 	default:

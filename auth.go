@@ -97,3 +97,28 @@ func GetToken(username string, passwordHash string) (string, error) {
 
 	return token, nil
 }
+
+// CheckToken checks whether existing token exists
+func CheckToken(token string) (bool, error) {
+	log.SetOutput(os.Stdout)
+
+	if token == "" {
+		return false, errors.New("token is empty")
+	}
+
+	db, errO := sql.Open("postgres", os.Getenv("DATABASE_URL"))
+	if errO != nil {
+		log.Println(errO)
+		return false, errO
+	}
+
+	var userID int
+	row := db.QueryRow("SELECT user_id FROM token WHERE token=$1", token)
+	switch errR := row.Scan(&userID); errR {
+	case nil:
+		return true, nil
+	default: // including sql.ErrNoRows
+		log.Println(errR)
+		return false, errR
+	}
+}
